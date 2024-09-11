@@ -1,7 +1,7 @@
 #include "pico/stdlib.h"
 
 #define BLOCK_CLEAR_SETTLE_TIME 100
-#define BLOCK_COUNT 2
+#define BLOCK_COUNT 4
 
 // Colours represent the signal at the entry to the block
 struct {
@@ -29,6 +29,22 @@ struct {
     [1].secondYellowPin = 8,
     [1].blockClearedAt = 0,
     [1].occupied = true,
+
+    [2].circuitPin = 17,
+    [2].redPin = 7,
+    [2].yellowPin = 6,
+    [2].greenPin = 5,
+    [2].secondYellowPin = 4,
+    [2].blockClearedAt = 0,
+    [2].occupied = true,
+
+    [3].circuitPin = 16,
+    [3].redPin = 3,
+    [3].yellowPin = 2,
+    [3].greenPin = 1,
+    [3].secondYellowPin = 0,
+    [3].blockClearedAt = 0,
+    [3].occupied = true,
 };
 
 void setRed(int blockId)
@@ -45,6 +61,14 @@ void setYellow(int blockId)
     gpio_put(blocks[blockId].yellowPin, true);
     gpio_put(blocks[blockId].greenPin, false);
     gpio_put(blocks[blockId].secondYellowPin, false);
+}
+
+void setDoubleYellow(int blockId)
+{
+    gpio_put(blocks[blockId].redPin, false);
+    gpio_put(blocks[blockId].yellowPin, true);
+    gpio_put(blocks[blockId].greenPin, false);
+    gpio_put(blocks[blockId].secondYellowPin, true   );
 }
 
 void setGreen(int blockId)
@@ -107,6 +131,10 @@ int main(void)
                 if(i > 0 && blocks[i-1].occupied)
                 {
                     setYellow(i);
+                }
+                else if(i > 1 && blocks[i-2].occupied)
+                {
+                    setDoubleYellow(i);
                 }
                 else
                 {
