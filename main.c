@@ -1,7 +1,7 @@
 #include "pico/stdlib.h"
 
 #define BLOCK_CLEAR_SETTLE_TIME 100
-#define BLOCK_COUNT 1
+#define BLOCK_COUNT 2
 
 // Colours represent the signal at the entry to the block
 struct {
@@ -20,7 +20,15 @@ struct {
     [0].greenPin = 13,
     [0].secondYellowPin = 12,
     [0].blockClearedAt = 0,
-    [0].occupied = true
+    [0].occupied = true,
+
+    [1].circuitPin = 18,
+    [1].redPin = 11,
+    [1].yellowPin = 10,
+    [1].greenPin = 9,
+    [1].secondYellowPin = 8,
+    [1].blockClearedAt = 0,
+    [1].occupied = true,
 };
 
 void setRed(int blockId)
@@ -36,6 +44,14 @@ void setYellow(int blockId)
     gpio_put(blocks[blockId].redPin, false);
     gpio_put(blocks[blockId].yellowPin, true);
     gpio_put(blocks[blockId].greenPin, false);
+    gpio_put(blocks[blockId].secondYellowPin, false);
+}
+
+void setGreen(int blockId)
+{
+    gpio_put(blocks[blockId].redPin, false);
+    gpio_put(blocks[blockId].yellowPin, false);
+    gpio_put(blocks[blockId].greenPin, true);
     gpio_put(blocks[blockId].secondYellowPin, false);
 }
 
@@ -88,7 +104,14 @@ int main(void)
             }
             else
             {
-                setYellow(i);
+                if(i > 0 && blocks[i-1].occupied)
+                {
+                    setYellow(i);
+                }
+                else
+                {
+                    setGreen(i);
+                }
             }
         }
     }
