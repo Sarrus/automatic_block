@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Remote Host (5d4e7c64-f6eb-469d-b2eb-37de65833d4f)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/../pico-sdk" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="crust-w-gwsr-tn1 (e680cf82-ee06-4fba-ba2f-ab08c0c30a8f)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/../pico-sdk" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="linux1 (210d80f9-dc00-4bab-baa7-c77023df1936)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/../pico-sdk" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="pi1 (283e0405-2b42-416c-9fbd-8bc3ccd65b6f)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/../pico-sdk" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="pi2 (5d4fc5eb-174f-4234-88f1-fe60813398d2)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/../pico-sdk" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

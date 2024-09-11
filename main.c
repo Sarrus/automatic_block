@@ -1,40 +1,95 @@
 #include "pico/stdlib.h"
 
-#define RED_LED_PIN 16
-#define AAT_PIN 17
-
 #define BLOCK_CLEAR_SETTLE_TIME 100
+#define BLOCK_COUNT 1
+
+// Colours represent the signal at the entry to the block
+struct {
+    uint circuitPin;
+    uint redPin;
+    uint yellowPin;
+    uint greenPin;
+    uint secondYellowPin;
+    uint64_t blockClearedAt;
+    bool occupied;
+} blocks[BLOCK_COUNT] =
+{
+    [0].circuitPin = 19,
+    [0].redPin = 15,
+    [0].yellowPin = 14,
+    [0].greenPin = 13,
+    [0].secondYellowPin = 12,
+    [0].blockClearedAt = 0,
+    [0].occupied = true
+};
+
+void setRed(int blockId)
+{
+    gpio_put(blocks[blockId].redPin, true);
+    gpio_put(blocks[blockId].yellowPin, false);
+    gpio_put(blocks[blockId].greenPin, false);
+    gpio_put(blocks[blockId].secondYellowPin, false);
+}
+
+void setYellow(int blockId)
+{
+    gpio_put(blocks[blockId].redPin, false);
+    gpio_put(blocks[blockId].yellowPin, true);
+    gpio_put(blocks[blockId].greenPin, false);
+    gpio_put(blocks[blockId].secondYellowPin, false);
+}
 
 int main(void)
 {
-    gpio_init(RED_LED_PIN);
-    gpio_set_dir(RED_LED_PIN, GPIO_OUT);
-    gpio_put(RED_LED_PIN, true);
+    for(int i = 0; i < BLOCK_COUNT; i++)
+    {
+        gpio_init(blocks[i].circuitPin);
+        gpio_init(blocks[i].redPin);
+        gpio_init(blocks[i].yellowPin);
+        gpio_init(blocks[i].greenPin);
+        gpio_init(blocks[i].secondYellowPin);
 
-    gpio_init(AAT_PIN);
-    gpio_set_dir(AAT_PIN, GPIO_IN);
-
-    uint64_t blockClearedAt = 0;
+        gpio_set_dir(blocks[i].circuitPin, GPIO_IN);
+        gpio_set_dir(blocks[i].redPin, GPIO_OUT);
+        gpio_set_dir(blocks[i].yellowPin, GPIO_OUT);
+        gpio_set_dir(blocks[i].greenPin, GPIO_OUT);
+        gpio_set_dir(blocks[i].secondYellowPin, GPIO_OUT);
+    }
 
     while(1)
     {
         uint64_t currentTime = to_ms_since_boot(get_absolute_time());
 
-        if(gpio_get(AAT_PIN))
+        for(int i = 0; i < BLOCK_COUNT; i++)
         {
-            blockClearedAt = 0;
-            gpio_put(RED_LED_PIN, true);
-        }
-        else if(blockClearedAt)
-        {
-            if(currentTime > blockClearedAt + BLOCK_CLEAR_SETTLE_TIME)
+            if(gpio_get(blocks[i].circuitPin))
             {
-                gpio_put(RED_LED_PIN, false);
+                blocks[i].blockClearedAt = 0;
+                blocks[i].occupied = true;
+            }
+            else if(blocks[i].blockClearedAt)
+            {
+                if(currentTime > blocks[i].blockClearedAt + BLOCK_CLEAR_SETTLE_TIME)
+                {
+                    blocks[i].occupied = false;
+                }
+            }
+            else
+            {
+                blocks[i].blockClearedAt = currentTime;
             }
         }
-        else
+
+        for(int i = 0; i < BLOCK_COUNT; i++)
         {
-            blockClearedAt = currentTime;
+            if(blocks[i].occupied)
+            {
+                setRed(i);
+            }
+            else
+            {
+                setYellow(i);
+            }
         }
     }
 }
