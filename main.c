@@ -1,6 +1,6 @@
 #include "pico/stdlib.h"
 
-#define BLOCK_CLEAR_SETTLE_TIME 100
+#define BLOCK_CLEAR_SETTLE_TIME 1000
 #define BLOCK_COUNT 4
 
 // Colours represent the signal at the entry to the block
@@ -90,6 +90,8 @@ int main(void)
         gpio_init(blocks[i].secondYellowPin);
 
         gpio_set_dir(blocks[i].circuitPin, GPIO_IN);
+        gpio_pull_up(blocks[i].circuitPin);
+
         gpio_set_dir(blocks[i].redPin, GPIO_OUT);
         gpio_set_dir(blocks[i].yellowPin, GPIO_OUT);
         gpio_set_dir(blocks[i].greenPin, GPIO_OUT);
@@ -102,7 +104,7 @@ int main(void)
 
         for(int i = 0; i < BLOCK_COUNT; i++)
         {
-            if(gpio_get(blocks[i].circuitPin))
+            if(!gpio_get(blocks[i].circuitPin))
             {
                 blocks[i].blockClearedAt = 0;
                 blocks[i].occupied = true;
